@@ -1,0 +1,76 @@
+<script src="assets/js/elliptic.js"></script>
+<script src="assets/js/Buffer.js"></script>
+<script src="assets/js/BigInteger.min.js"></script>  
+
+    <div id="breadcrumbs"></div>
+    <script src="/blockchain/breadcrumbs_keys.js"></script>
+
+
+  <!-- start card -->
+  <div class="card">
+      <h5 class="card-header">Public & Private Key Pair</h5>
+  <div class="card-body">
+
+    <div class="form-horizontal">
+      <div class="form-group">
+
+        <label class="control-label">Private Key: <img src="assets/img/key_02.png" height="30"> </label>
+        <div class="form-row">
+            <div class="col">
+              <input id="privateKey" type="text" disabled class="form-control">
+            </div>
+            <div class="col-auto">
+              <button class="btn btn-primary ladda-button" data-style="expand-right" id="randomButton">
+                <span class="ladda-label">New Keys</span>
+              </button>
+            </div>                        
+        </div><br>
+
+        <label class="control-label">Public Key: <img src="assets/img/key_03.png" height="30"> </label>
+        <input id="publicKey" type="text" disabled class="form-control">
+
+
+      </div>
+    </div>
+
+  </div>   
+  </div>   
+  <!-- end card -->
+
+
+<script>
+
+var EC = elliptic.elliptic().ec;
+var ec = new EC('secp256k1');
+
+var keypair;
+
+if (sessionStorage.privateKey) {
+  keypair = ec.keyFromPrivate(sessionStorage.privateKey);
+  $('#privateKey').val(sessionStorage.privateKey);
+  $('#publicKey').val(sessionStorage.publicKey);
+}
+else{
+  random();
+}
+
+function update() {
+  var prv = keypair.getPrivate('hex');
+  var pub = keypair.getPublic('hex');
+  $('#privateKey').val(bigInt(prv, 16).toString());
+  $('#publicKey').val(pub);
+  sessionStorage.privateKey = prv.toString();
+  sessionStorage.publicKey = pub.toString();
+}
+
+
+function random() {
+  keypair = ec.genKeyPair();
+  update();
+}
+
+$(function() {
+  $('#randomButton').click(random);
+});
+
+</script>

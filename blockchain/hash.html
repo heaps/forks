@@ -1,0 +1,81 @@
+
+    <!-- blockchain styles and libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Ladda/1.0.6/ladda-themeless.min.css">
+    <link rel="stylesheet" href="assets/css/blockchain.css">
+    <link rel="stylesheet" href="assets/css/blockies.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Ladda/1.0.6/ladda.min.js"></script>
+    <script src="assets/js/sha256.js"></script>
+    <script src="assets/js/blockchain.js"></script>
+    <script src="assets/js/blockies.js"></script>    
+    <script src="assets/js/blockies_optimizations.min.js"></script>    
+
+    <div id="breadcrumbs"></div>
+    <script src="/blockchain/breadcrumbs_basics.js"></script>
+
+    <!-- card start -->
+    <div class="card bg-light mb-3">
+    <h5 class="card-header">Hash</h5>
+    <div class="card-body">
+
+    <!-- form start -->
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label for="data" class="control-label">Data:</label>
+            <div>
+                <textarea id="data" rows="10" class="form-control"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="hash" class="control-label">Hash:</label>
+            <div>
+                <input id="hash" type="text" disabled class="form-control">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="identicon" class="control-label">Identicon:</label>
+            <div>
+                <div id="identicon"></div>
+                <div id="roundIcon" class="identicon"></div>
+            </div>
+        </div>
+    </form>
+    <!-- form end -->
+
+    </div>
+    </div>
+    <!-- card end -->
+
+
+
+
+    <script>
+
+        // ----------------------------------------------------------------------
+        // code runs when loaded
+        // page is currently loading dynamically, $('#target').load
+        // ----------------------------------------------------------------------
+    
+        var data      = document.getElementById('data');
+        var roundIcon = document.getElementById('roundIcon');        
+
+        function hash(input){
+            var hash = CryptoJS.SHA256(input).toString();
+            document.getElementById('hash').value = hash;
+
+            // create identicon for empty input
+            roundIcon.style.backgroundImage = 'url(' + hqx(blockies.create({ seed:hash ,size: 8,scale: 3}),4).toDataURL()+')';            
+        }
+
+        $( document ).ready(function(){
+            hash('');
+            data.oninput = function(e){
+                console.log(data.value);
+                hash(data.value);
+            };
+        });
+
+
+    
+    </script>
+

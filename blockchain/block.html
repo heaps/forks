@@ -1,0 +1,172 @@
+
+    <!-- blockchain styles and libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Ladda/1.0.6/ladda-themeless.min.css">
+    <link rel="stylesheet" href="assets/css/blockchain.css">
+    <link rel="stylesheet" href="assets/css/blockies.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Ladda/1.0.6/ladda.min.js"></script>
+    <script src="assets/js/sha256.js"></script>
+    <script src="assets/js/blockchain.js"></script>
+    <script src="assets/js/blockies.js"></script>    
+    <script src="assets/js/blockies_optimizations.min.js"></script>    
+
+    <div id="breadcrumbs"></div>
+    <script src="/blockchain/breadcrumbs_basics.js"></script>
+
+    <!-- card start -->
+    <div class="card mb-3">
+    <h5 class="card-header">Blockchain Basics: Standalone Block</h5>
+    <div class="card-body" id="background" style="background-color: #E0F0D9;">
+
+    <!-- form start -->
+    <div class="form-horizontal">
+        <div class="form-group">
+
+            <!-- block and nonce labels -->
+            <div class="form-row">
+                <div class="col">
+                  <label class="control-label">Block:</label>
+                </div>
+                <div class="col">
+                  <label class="control-label">Nonce:</label>
+                </div>                        
+            </div>
+
+            <!-- block and nonce numbers -->
+            <div class="form-row">
+                <div class="col">
+                  <input id="block" type="text" class="form-control" value="1" disabled >
+                </div>
+                <div class="col">
+                  <input id="nonce" type="text" class="form-control" value="72608">
+                </div>                        
+            </div><br>
+
+            <!-- block data -->
+            <label class="control-label">Data:</label>
+            <div>
+                <textarea id="data" rows="10" class="form-control"></textarea>                        
+            </div><br>
+
+            <!-- block hash -->
+            <label class="control-label">Hash:</label>
+            <div class="form-row">
+                <div class="col">
+                  <input id="hash" type="text" disabled class="form-control">
+                </div>
+                <div class="col-auto">
+                  <button class="btn btn-primary ladda-button" data-style="expand-right" id="mineButton" onclick="mineBlock()">
+                    <span class="ladda-label">Mine</span>
+                  </button>
+                </div>                        
+            </div><br>
+
+            <!-- show if hash pattern not found -->
+            <div id="demo">
+              <transition name="fade">
+                <p id="miningMessage" class="text-primary"></p>
+              </transition>
+            </div>
+
+        </div>
+    </div>
+    <!-- form end -->
+
+    </div>
+    </div>
+    <!-- card end -->
+
+
+    <script>
+
+        var block      = document.getElementById('block');    
+        var nonce      = document.getElementById('nonce');
+        var data       = document.getElementById('data');
+        var background = document.getElementById('background');
+        var miningMessage = document.getElementById('miningMessage');
+        var l = Ladda.create(document.getElementById('mineButton'));        
+
+
+        function hash(){
+            var input  = block.value + nonce.value + data.value;            
+            var hash   = CryptoJS.SHA256(input).toString();
+            setColor(hash);
+        }
+
+
+        function setColor(hash){
+            document.getElementById('hash').value = hash;            
+            var start = hash.slice(0,4);
+            if(start === '0000'){
+                background.style.backgroundColor = '#E0F0D9';
+            }
+            else{
+                background.style.backgroundColor = '#F9DCDD';
+            }                        
+        }        
+
+
+        $( document ).ready(function(){        
+            hash();
+            data.oninput  = function(e){ hash();};
+            nonce.oninput = function(e){ hash();};            
+        });
+
+        function myFunction() {
+            var x = document.getElementById("myDIV");
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+        }
+
+
+        function mineBlock(){
+
+            miningMessage.style.display = "block";
+            miningMessage.innerHTML = 'Mining Block';
+            l.toggle();
+
+            setTimeout(function(){
+
+                var hash  = '';
+                var start = '';
+                var input = '';
+                var limit = 1000000;
+
+                for (var i=0; i<=limit; i++) {
+                    input  = block.value + i + data.value;
+                    hash  = CryptoJS.SHA256(input).toString();
+                    start = hash.slice(0,4);
+
+                    // hash pattern found
+                    if(start === '0000'){
+                        setColor(hash);
+                        nonce.value = i;
+                        l.toggle();                        
+
+                        // set success message
+                        miningMessage.innerHTML = 'Mining Success!';
+                        setTimeout(() => miningMessage.style.display = "none", 3000);
+                        return;
+                    }
+                    // not found                
+                    else if (i === limit){
+                        setColor(hash);
+
+                        // set failure message
+                        miningMessage.innerHTML = 'Mining Failed!';
+                        setTimeout(() => miningMessage.style.display = "none", 3000);
+                        return;
+                    }
+                }        
+
+
+            },250);
+        }
+
+    </script>
+
+  </body>
+</html>

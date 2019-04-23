@@ -1,0 +1,232 @@
+<script src="assets/js/elliptic.js"></script>
+<script src="assets/js/Buffer.js"></script>
+<script src="assets/js/BigInteger.min.js"></script>  
+
+    <div id="breadcrumbs"></div>
+    <script src="/blockchain/breadcrumbs_keys.js"></script>
+
+
+<div class="card-deck pl-3" id="chain"> 
+
+  <!-- start card -->
+  <div class="card">
+      <h5 class="card-header">Message Signature</h5>
+  <div class="card-body">
+
+    <div class="form-horizontal">
+      <div class="form-group">
+
+
+        <label class="control-label">Transaction:</label>
+
+        <div class="form-row">
+
+          <div class="col-3 pr-0">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text">$</div>
+              </div>
+              <input type="text" class="form-control" id="sign-amount" value="20">
+            </div>
+          </div>
+
+          <div class="col px-0">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text">From:</div>
+              </div>
+              <input type="text" class="form-control" id="sign-from" value="0xD1D618bcb179db8b020358710138D1A008f4f39E">
+            </div>
+          </div>
+
+          <div class="col px-0">
+            <div class="input-group mb-2">
+              <div class="input-group-prepend">
+                <div class="input-group-text">To:</div>
+              </div>
+              <input type="text" class="form-control" id="sign-to" value="0x34FCd253bEf99666dD7843709b2Ba6E5949A1897">
+            </div>
+          </div>
+
+        </div><br>
+
+        <label class="control-label">Private Key:</label>
+        <div class="form-row">
+            <div class="col">
+              <input id="privateKey" type="text" disabled class="form-control">
+            </div>
+            <div class="col-auto">
+              <button class="btn btn-primary ladda-button" data-style="expand-right" id="sign">
+                <span class="ladda-label">Sign</span>
+              </button>
+            </div>                        
+        </div><br>
+
+        <label class="control-label">Transaction Signature:</label>
+        <input id="sign-signature" type="text" disabled class="form-control">
+
+
+
+      </div>
+    </div>
+
+  </div>   
+  </div>   
+  <!-- end card -->
+
+
+  <!-- start card -->
+  <div class="card">
+      <h5 class="card-header">Signature Verification</h5>
+  <div class="card-body" id="verificationCard">
+
+    <div class="form-horizontal">
+      <div class="form-group">
+
+        <label class="control-label">Transaction:</label>
+
+        <div class="form-row">
+
+          <div class="col-3 pr-0">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text">$</div>
+              </div>
+              <input type="text" class="form-control" id="verify-amount" value="20">
+            </div>
+          </div>
+
+          <div class="col px-0">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text">From:</div>
+              </div>
+              <input type="text" class="form-control" id="verify-from" value="0xD1D618bcb179db8b020358710138D1A008f4f39E">
+            </div>
+          </div>
+
+          <div class="col px-0">
+            <div class="input-group mb-2">
+              <div class="input-group-prepend">
+                <div class="input-group-text">To:</div>
+              </div>
+              <input type="text" class="form-control" id="verify-to" value="0x34FCd253bEf99666dD7843709b2Ba6E5949A1897">
+            </div>
+          </div>
+
+        </div><br>
+
+        <label class="control-label">Public Key:</label>
+        <div class="form-row">
+            <div class="col">
+              <input id="publicKey" type="text" disabled class="form-control">
+            </div>
+            <div class="col-auto">
+              <button class="btn btn-primary ladda-button" data-style="expand-right"  id="verify">
+                <span class="ladda-label">Verify</span>
+              </button>
+            </div>                        
+        </div><br>
+
+        <label class="control-label">Transaction Signature:</label>
+        <input id="verify-signature" type="text" disabled class="form-control">
+
+
+      </div>
+    </div>
+
+  </div>   
+  </div>   
+  <!-- end card -->
+
+</div>
+
+<script>
+
+var EC = elliptic.elliptic().ec;
+var ec = new EC('secp256k1');
+
+var keypair;
+
+if (sessionStorage.privateKey) {
+  keypair = ec.keyFromPrivate(sessionStorage.privateKey);
+  $('#privateKey').val(sessionStorage.privateKey);
+  $('#publicKey').val(sessionStorage.publicKey);
+}
+else{
+  random();
+}
+
+function update() {
+  var prv = keypair.getPrivate('hex');
+  var pub = keypair.getPublic('hex');
+  $('#privateKey').val(bigInt(prv, 16).toString());
+  $('#publicKey').val(pub);
+  sessionStorage.privateKey = prv.toString();
+  sessionStorage.publicKey = pub.toString();
+}
+
+function random() {
+  keypair = ec.genKeyPair();
+  update();
+}
+
+$(function() {
+  $('#randomButton').click(random);
+});
+
+
+$('#sign').click(function() {
+  var transaction = $('#sign-amount').val() + $('#sign-from').val() + $('#sign-to').val();
+  var binaryMessage = buffer.Buffer.from(transaction);
+  var hexSignature = buffer.Buffer.from(keypair.sign(binaryMessage).toDER()).toString('hex');
+  $('#sign-signature').val(hexSignature);
+  $('#verify-signature').val(hexSignature);
+});
+
+// keep transaction data in sync
+$('#sign-amount').bind('keyup', function() {
+    $('#verify-amount').val($('#sign-amount').val());
+});
+$('#sign-from').bind('keyup', function() {
+    $('#verify-from').val($('#sign-from').val());
+});
+$('#sign-to').bind('keyup', function() {
+    $('#verify-to').val($('#sign-to').val());
+});
+$('#verify-amount').bind('keyup', function() {
+    $('#sign-amount').val($('#verify-amount').val());
+});
+$('#verify-from').bind('keyup', function() {
+    $('#sign-from').val($('#verify-from').val());
+});
+$('#verify-to').bind('keyup', function() {
+    $('#sign-to').val($('#verify-to').val());
+});
+
+
+$('#verify').click(function() {
+
+  // verify by using only the public key
+  var publickey = $('#publicKey').val().replace(/[^0-9a-fA-F]/g, '');
+  var tmpKey;
+  try {
+      tmpKey = ec.keyFromPublic(publickey, 'hex');
+      var transaction = $('#verify-amount').val() + $('#verify-from').val() + $('#verify-to').val();      
+      var binaryMessage = buffer.Buffer.from(transaction);
+      var inspect = tmpKey.verify(binaryMessage, $('#verify-signature').val());
+      if (tmpKey.verify(binaryMessage, $('#verify-signature').val())) {
+          $('#verificationCard').removeClass('alert-danger');
+          $('#verificationCard').addClass('alert-success');
+      } else {
+          $('#verificationCard').removeClass('alert-success');        
+          $('#verificationCard').addClass('alert-danger');
+      }
+  } catch (e) {
+      $('#verificationCard').addClass('alert-danger');
+  }
+
+});
+
+
+</script>

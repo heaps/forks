@@ -1,0 +1,287 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+
+    <title>Digital Transformation</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <!-- Custom styles for this template -->
+    <link href="/starter-template.css" rel="stylesheet">
+    <script src="https://unpkg.com/history/umd/history.min.js"></script>
+
+    <!-- blockchain styles and libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Ladda/1.0.6/ladda-themeless.min.css">
+    <link rel="stylesheet" href="assets/css/blockchain.css">
+    <link rel="stylesheet" href="assets/css/blockies.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Ladda/1.0.6/ladda.min.js"></script>
+    <script src="assets/js/sha256.js"></script>
+    <script src="assets/js/blockchain.js"></script>
+    <script src="assets/js/blockies.js"></script>    
+    <script src="assets/js/blockies_optimizations.min.js"></script>    
+
+  </head>
+
+  <body>
+
+    <div id="navigationBar"></div>
+    <script src="/blockchain/navigationBar.js"></script>
+
+
+        <div class="card-deck pl-3" id="chain">  
+        </div>
+
+
+
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+    <script>
+
+        var blocks = [
+            {
+              number   : 1,
+              nonce    : 11316,
+              data     : '',
+              previous : '0000000000000000000000000000000000000000000000000000000000000000',
+              hash     : '000015783b764259d382017d91a36d206d0600e2cbb3567748f46a33fe9297cf'
+            },
+            {
+              number   : 2,
+              nonce    : 35230,
+              data     : '',
+              previous : '000015783b764259d382017d91a36d206d0600e2cbb3567748f46a33fe9297cf',
+              hash     : '000012fa9b916eb9078f8d98a7864e697ae83ed54f5146bd84452cdafd043c19'          
+            },
+            {
+              number   : 3,
+              nonce    : 12937,
+              data     : '',
+              previous : '000012fa9b916eb9078f8d98a7864e697ae83ed54f5146bd84452cdafd043c19',
+              hash     : '0000b9015ce2a08b61216ba5a0778545bf4ddd7ceb7bbd85dd8062b29a9140bf'
+            },
+            {
+              number   : 4,
+              nonce    : 35990,
+              data     : '',
+              previous : '0000b9015ce2a08b61216ba5a0778545bf4ddd7ceb7bbd85dd8062b29a9140bf',
+              hash     : '0000ae8bbc96cf89c68be6e10a865cc47c6c48a9ebec3c6cad729646cefaef83'
+            },
+            {
+              number   : 5,
+              nonce    : 56265,
+              data     : '',
+              previous : '0000ae8bbc96cf89c68be6e10a865cc47c6c48a9ebec3c6cad729646cefaef83',
+              hash     : '0000e4b9052fd8aae92a8afda42e2ea0f17972ea67cead67352e74dd6f7d217c'
+            }
+        ];
+
+
+
+        function hash(number){
+            var block = document.getElementById('block'+number);    
+            var nonce = document.getElementById('nonce'+number);
+            var data  = document.getElementById('data'+number);
+            var previous  = document.getElementById('previous'+number);
+
+            var input  = block.value + nonce.value + data.value + previous.value;            
+            var hash   = CryptoJS.SHA256(input).toString();
+            setColor(number, hash);
+        }
+
+
+        function setColor(number, hash){
+            var background = document.getElementById('background'+number);
+
+            document.getElementById('hash'+number).value = hash;
+            //document.getElementById('hash'+number).dispatchEvent(new Event('input'));
+            handleHashChange(number);
+
+            var start = hash.slice(0,4);
+            if(start === '0000'){
+                background.style.backgroundColor = '#E0F0D9';
+            }
+            else{
+                background.style.backgroundColor = '#F9DCDD';
+            }                        
+        }        
+
+        function handleHashChange(number){
+            if ((number+1) <= blocks.length){
+                document.getElementById('previous'+(number+1)).value = document.getElementById('hash'+number).value;
+                hash(number+1);
+            }
+        }
+
+
+        window.onload = function(){
+            hash();
+            data.oninput  = function(e){ hash();};
+            nonce.oninput = function(e){ hash();};            
+        };
+    
+
+        function myFunction() {
+            var x = document.getElementById("myDIV");
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+        }
+
+
+        function mineBlock(number){
+
+            var block = document.getElementById('block'+number);    
+            var nonce = document.getElementById('nonce'+number);
+            var data  = document.getElementById('data'+number);
+            var previous  = document.getElementById('previous'+number);
+            var miningMessage = document.getElementById('miningMessage'+number);
+            var l = Ladda.create(document.getElementById('mineButton-'+number));        
+            miningMessage.style.display = "block";
+            miningMessage.innerHTML = 'Mining Block';
+            l.toggle();
+
+            setTimeout(function(){
+
+                var hash  = '';
+                var start = '';
+                var input = '';
+                var limit = 1000000;
+
+                for (var i=0; i<=limit; i++) {
+                    input  = block.value + i + data.value + previous.value;
+                    hash  = CryptoJS.SHA256(input).toString();
+                    start = hash.slice(0,4);
+
+                    // hash pattern found
+                    if(start === '0000'){
+                        setColor(number,hash);
+                        nonce.value = i;
+                        l.toggle();                        
+
+                        // set success message
+                        miningMessage.innerHTML = 'Mining Success!';
+                        setTimeout(() => miningMessage.style.display = "none", 3000);
+                        return;
+                    }
+                    // not found                
+                    else if (i === limit){
+                        setColor(number,hash);
+
+                        // set failure message
+                        miningMessage.innerHTML = 'Mining Failed!';
+                        setTimeout(() => miningMessage.style.display = "none", 3000);
+                        return;
+                    }
+                }        
+
+
+            },250);
+        }
+
+
+        window.onload = function(){
+            var html = '';
+
+            blocks.forEach(function(block){
+                html +='<!-- card start -->';
+                html +='   <div class="card mb-3" style="min-width: 18rem; max-width: 18rem;">';
+                html +='';
+                html +='    <div class="card-body" id="background' + block.number + '" style="background-color: #E0F0D9;">';
+                html +='';
+                html +='    <!-- form start -->';
+                html +='    <form class="form-horizontal">';
+                html +='        <div class="form-group">';
+                html +='';
+                html +='';
+                html +='            <!-- block and nonce -->';
+                html +='            <label class="control-label">Block:</label>';
+                html +='            <input id="block' + block.number + '" type="text" class="form-control" value="' + block.number + '" disabled ><br>';
+                html +='';
+                html +='            <label class="control-label">Nonce:</label>';
+                html +='            <input id="nonce' + block.number + '" type="text" class="form-control" value="' + block.nonce + '"><br>';
+                html +='';
+                html +='';
+                html +='            <!-- block data -->';
+                html +='            <label class="control-label">Data:</label>';
+                html +='            <div>';
+                html +='                <textarea id="data' + block.number + '" rows="4" class="form-control"></textarea>';
+                html +='            </div><br>';
+                html +='';
+                html +='';
+                html +='            <!-- block hash -->';
+                html +='            <label class="control-label">Previous:</label>';
+                html +='            <input id="previous' + block.number + '" type="text" class="form-control" value="' + block.previous + '" style="font-size: 0.75rem;" disabled><br>';
+                html +='';
+                html +='            <label class="control-label">Hash:</label>';
+                html +='            <input id="hash' + block.number + '" type="text" class="form-control" value="' + block.hash + '" style="font-size: 0.75rem;" disabled><br>';
+                html +='';
+                html +='            <button class="btn btn-primary ladda-button"  data-style="expand-right" id="mineButton-' + block.number + '" onclick="mineBlock(' + block.number + ')">';
+                html +='              <span class="ladda-label">Mine</span>';
+                html +='            </button><br>';
+                html +='';
+                html +='            <!-- show if hash pattern not found -->';
+                html +='            <div id="demo">';
+                html +='              <transition name="fade">';
+                html +='                <p id="miningMessage' + block.number + '" class="text-primary"></p>';
+                html +='              </transition>';
+                html +='            </div>';
+                html +='';
+                html +='';
+                html +='        </div>';
+                html +='    </form>';
+                html +='    <!-- form end -->';
+                html +='';
+                html +='';
+                html +='    </div>';
+                html +='  </div>';
+                html +='<!-- card end -->';
+            });
+
+            // add html to chain div
+            document.getElementById('chain').innerHTML = html;
+
+            // detect nonce and data input
+            blocks.forEach(function(block){
+                document.getElementById('data'+block.number).oninput = function(e){ hash(block.number);};
+                document.getElementById('nonce'+block.number).oninput = function(e){ hash(block.number);};
+
+                // // handle programmatic changes to the value
+                // document.getElementById('hash'+block.number).addEventListener("modified", function(){
+                //     console.log("hash input");
+                //     handleHashChange(block.number);
+                // });
+
+                // document.getElementById('hash'+block.number).addEventListener("input", function () {
+                //   console.log("hash input");
+                //   handleHashChange(block.number);
+                // });
+
+                // document.getElementById('previous'+block.number).addEventListener("input", function () {
+                //   console.log("previous input");
+                //   handleHashChange(block.number);
+                // });
+
+            });
+
+        };
+
+
+
+    </script>
+
+  </body>
+</html>
