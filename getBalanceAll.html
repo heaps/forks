@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+<h1>Balance List</h1>
+Check Balance:
+<button onclick="getBalance()">Get Balance</button><br><br>
+<div id="status" style="color:#0000FF"></div>
+
+<script>
+
+var accounts = [];
+accounts.push({'address':'0x72ac0213dCbe1F1970e583Cbb4894da3e88eCa1b','balance':0,'label':'Abel Sanchez'});
+accounts.push({'address':'0x445E6CD5aa45458b7A613cdbeF5C52B0eCc503CF','balance':0,'label':'Arlington'});
+accounts.push({'address':'0x79266ef92c9589616FAD7440909aBB1F2123dd9a','balance':0,'label':'Boston'});
+accounts.push({'address':'0xDeB8683b76C784f450e153E1AC0057fdc19605f8','balance':0,'label':'Beverly'});
+accounts.push({'address':'0x6cB9b7dE00D0B7FfE057307150A6796aE79CB76c','balance':0,'label':'Braintree'});
+accounts.push({'address':'0xA73aF6d128851073b2C2f4039f886A8B32F3Ef2a','balance':0,'label':'Brookline'});
+accounts.push({'address':'0x2d91CFc3186bb70bEc4C1EA3A4b2977BA5C56C8b','balance':0,'label':'Cambridge'});
+accounts.push({'address':'0xF131ADF613FEc6bd69C75826BAa6ACdfC6690b55','balance':0,'label':'Canton'});
+accounts.push({'address':'0xE068bB8db43234194df960cC68ea80f96baa15C2','balance':0,'label':'Charlestown'});
+accounts.push({'address':'0xe3307b0Fd0E00a7f5aeEb106AC38dC5FAc66655a','balance':0,'label':'Clinton'});
+accounts.push({'address':'0xBfA0A39513954E9d15e2A973c7a58f004348e260','balance':0,'label':'Concord'});
+accounts.push({'address':'0xCD5E7F5368f5202271dA85e0d9ED0FC6Ec18Aa12','balance':0,'label':'Danvers'});
+accounts.push({'address':'0x6Da2D0763711bfc1bD932e6f037bc9bF8eC6f5aD','balance':0,'label':'Dartmouth'});
+accounts.push({'address':'0x5B26e7837E006c96D77Df50aE2B2Fd06EdF3985b','balance':0,'label':'Dedham'});
+accounts.push({'address':'0xc7EA4b0e447d4Daf03411564851B74B35dFD87C7','balance':0,'label':'Dennis'});
+accounts.push({'address':'0x4d268Bf97c2C3aEf71fF6E61140Bf2B509A376Ec','balance':0,'label':'Duxbury'});
+accounts.push({'address':'0xB2D7FAba021A9E2e7B6890F513d39c470B76a76A','balance':0,'label':'Eastham'});
+accounts.push({'address':'0x7F6f1fbD36561f2CfD070615c731590de4eE2a51','balance':0,'label':'Edgartown'});
+accounts.push({'address':'0xfF8ac1c5cAbdF9A82c7D5E94bb2ba4Ba5964023A','balance':0,'label':'Everett'});
+accounts.push({'address':'0x85c2F129CD26a7Cad7B3c14796286cB1e8b54eA6','balance':0,'label':'Fairhaven'});
+accounts.push({'address':'0xf2302841e988F4EA99b7Ab9EFA4ea3c93B1b231B','balance':0,'label':'Falmouth'});
+accounts.push({'address':'0x2b4d043852829513F3C2Fa1BC23eeeE7EE45ad72','balance':0,'label':'Hyannis'});
+accounts.push({'address':'0x0EE490De508ecc46399ec7D53E058F8cE123581d','balance':0,'label':'Lexington'});
+accounts.push({'address':'0x86778cBde137995033B1Eed9bc4D95457823f377','balance':0,'label':'Malden'});
+accounts.push({'address':'0xf802E7d3D42ecF6622d207c60a8Ce4701c5A8849','balance':0,'label':'Medford'});
+accounts.push({'address':'0x0FB02a1566Cc3395d111930D2620EC4aAE100873','balance':0,'label':'Milton'});
+accounts.push({'address':'0x2163C49e12BC8AAEBc3ea9937A0dfFaE9AFA55F2','balance':0,'label':'Natick'});
+accounts.push({'address':'0x50D87faC36dff84F2D91f6af87074C7bCE702A00','balance':0,'label':'Newton'});
+accounts.push({'address':'0x091be8De792b197Ca901940f451B580ac8DB5320','balance':0,'label':'Norwood'});
+accounts.push({'address':'0xAC9DEb427e934d96247751F242e1d305Dc6EC93e','balance':0,'label':'Wellesley'});
+accounts.push({'address':'0xbD585D3ed1f005CC50f603eCcEA13a7F40A477cf','balance':0,'label':'Watertown'});
+
+
+// create an instance of web3 from MetaMask
+if (typeof web3 !== 'undefined') {
+  web3 = new Web3(web3.currentProvider);
+} else {
+  // set the provider you want from Web3.providers
+  web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+}
+
+// counter for array item
+var counter = 0;
+
+function getBalance(){
+
+	accounts.forEach(function(account){
+
+		// get the balance of account
+		web3.eth.getBalance(account.address, function(err, res){
+			counter++;
+
+			// add balance to account object in accounts array
+			// fromWei returns ether equivalent
+			addBalance(account,web3.fromWei(res));
+
+			// if all account data has returned, display data
+			if (counter >= accounts.length){
+				displayBalances();
+			}
+		});
+	});
+}
+
+function displayBalances(){
+
+	var table = '<table class="table" >' +
+  					'<thead class="thead-light">' +
+					    '<tr>' +
+					      '<th scope="col">balance</th>' +
+					      '<th scope="col">account</th>' +
+					      '<th scope="col">address</th>' +
+					    '</tr>' +
+					 '</thead>' +
+					 '<tbody>';
+
+	accounts.forEach(function(account){
+		table += '<tr>';
+		table += '  <td>' + account.balance + '</td>';
+		table += '  <td>' + account.label + '</td>';		
+		table += '  <td>' + account.address + '</td>';				
+		table += '</tr>';		
+	});
+
+  	table += '  </tbody>';
+	table += '</table>';
+	document.getElementById('status').innerHTML += table;
+
+}
+
+function addBalance(account, balance){
+	account.balance = balance;
+}
+
+
+</script>
+</html>
+
