@@ -14,7 +14,147 @@ Check Balance:
 //      REMOVE: private keys before deploy
 // -------------------------------------------
 
-var accounts = [{"address":"0xfeB9eA72F2CFD288A0FC4DDfD483Ac2BBC7Cd616","label":"Arlington"},{"address":"0xC15644086071Cdc9359124c53fe0C298c9918E29","label":"Boston"},{"address":"0x7a969C7D96e6665761E94D9405A31793d59Ce757","label":"Beverly"},{"address":"0xB300D4d57f6a46353C2E6BFd73a879758023b764","label":"Braintree"},{"address":"0xEc642886061b9628fcE1eC48783cc6Faed36e700","label":"Brookline"},{"address":"0xC91735137c1368DFE4A2A883e6a7591ed617846e","label":"Cambridge"},{"address":"0xAa9a42BeEDDC497c3Ca470b5b01251B39142D097","label":"Canton"},{"address":"0x38c7b0F9F0f8bB586Cb02Ef48Af88Fd991c66C7B","label":"Charlestown"},{"address":"0x456039e7498b5D3d9A0Cd776052287C17eE48B49","label":"Clinton"},{"address":"0x480b5b6874ab5a7A6104bAF73fD66c493b42eED6","label":"Concord"},{"address":"0x944e30798F1F96b6568538b99201222a3eDcb89D","label":"Danvers"},{"address":"0x02904A44B217000B58c9e9C2256aCD6371F2d0B6","label":"Dartmouth"},{"address":"0xDcDfB0BC233068f80b08f2B0C6df66Fe802906A1","label":"Dedham"},{"address":"0x1eED558A075c699832741e112db0434f3B845076","label":"Dennis"},{"address":"0x1d7F2FaaCD04b17F52074fCEf8d9769e73f57945","label":"Duxbury"},{"address":"0x4ee3a8613AC1935624e5C71D0879347b71D27D72","label":"Eastham"},{"address":"0x5b91fE0d28EBCffDc0D84065432A95F798F9AeB4","label":"Edgartown"},{"address":"0xC96b7F78D44726a6a452ceB97221000117d93d15","label":"Everett"},{"address":"0x3dfF98cc6Ab70F365157Bb1DD91cB9BCA8A63DdC","label":"Fairhaven"},{"address":"0x6B67dB9090240D1Da5d6eA7A31931a25890896B3","label":"Falmouth"},{"address":"0xF95e60f9C24d6Cb5BA3008b888F61503F1e71324","label":"Hyannis"},{"address":"0x61C76710Aec211bF6753178786CD79E2B7456c1f","label":"Lexington"},{"address":"0xCeb331C53816E6cD907f8425eBC7c968B9767256","label":"Malden"},{"address":"0x2BB4A0f05EfA0Ad28b33F54DC665A025D848baEF","label":"Medford"},{"address":"0xa30b5b8B84FCF352959224239a06928838e114f7","label":"Milton"},{"address":"0xc66b8e0DF1A44e445DDe50E671AD3F42f2f6c532","label":"Natick"},{"address":"0xFa2291E8CD8783468A33B3Dec48aCA4EF8A17900","label":"Newton"},{"address":"0xc10547F88E9ebb7CF41B74c1eE1d922817BCF80E","label":"Norwood"},{"address":"0x75D746dD9bdA961d2c220DF25B627E4667Fe4286","label":"Wellesley"},{"address":"0x85784603d9E4d1B9C85b4076A06f46CAF2CA65b1","label":"Watertown"}
+var accounts = [
+  {
+    "address": "0x05558845CE750442e7909fb53509BFB4B3DB8188",
+    "label": "Arlington"
+  },
+  {
+    "address": "0xf167C7C7Bc8c7eF118D75De8c93976758Ee042F2",
+    "label": "Belmont"
+  },
+  {
+    "address": "0x6B64AA2719Aa687Dd15C46a4667c051492f54a56",
+    "label": "Beverly"
+  },
+  {
+    "address": "0x2928D1B07b16dB5BfCD5f74293c0408576d71050",
+    "label": "Boston"
+  },  
+  {
+    "address": "0x7E10c8253F31Ff2c249303fA123FbE6DA17153a9",
+    "label": "Braintree"
+  },
+  {
+    "address": "0x27Ae06cD36C67b79A798439A4233c73CAB6Ae911",
+    "label": "Brookline"
+  },
+  {
+    "address": "0x2C90DD33c18cec86E59b9eCFfdCC2eDAbee58852",
+    "label": "Cambridge"
+  },
+  {
+    "address": "0xC084b573f65aD441C95d03Fe4305A03698cA1a58",
+    "label": "Canton"
+  },
+  {
+    "address": "0x7f9bEB3436D8051E5305D198a85ba8c2eCE4E6C8",
+    "label": "Chappaquiddick"
+  },
+  {
+    "address": "0x48283988a2a08C1189cb730Ec91e48b14b0696A6",
+    "label": "Charlestown"
+  },
+  {
+    "address": "0xfa780F0D3eBCe4202d1247Bf647728580A8943b8",
+    "label": "Clinton"
+  },
+  {
+    "address": "0x735dED0a6644BB431bB702be03619955B6A6414A",
+    "label": "Concord"
+  },
+  {
+    "address": "0xa633432EBAb724874d2e43062738d509Ea58E5eD",
+    "label": "Danvers"
+  },
+  {
+    "address": "0xcb606c3FAE3048B94a4261fA1e93583aE3eA2068",
+    "label": "Dartmouth"
+  },
+  {
+    "address": "0xfCE3E96d0dEaBDf64ab23b482b841981F292B10b",
+    "label": "Dedham"
+  },
+  {
+    "address": "0x0F16fC5E7cB253796014694A87093cEA16500e4F",
+    "label": "Dennis"
+  },
+  {
+    "address": "0xADc3cEeD845e7f8975B84056c7c824897CFB8079",
+    "label": "Duxbury"
+  },
+  {
+    "address": "0x4bD5C0F6d44879ee31A8baaF12395ca77171e7D0",
+    "label": "Eastham"
+  },
+  {
+    "address": "0xC20bc25Eb135cf9411cf6Efe04c6377b05caF0e6",
+    "label": "Edgartown"
+  },
+  {
+    "address": "0x64c796aEADF8E71803Da8c3BE06c883F49E66548",
+    "label": "Everett"
+  },
+  {
+    "address": "0xd5C993E02d4Dd6C48B6ca4833f0D0026e11E3A68",
+    "label": "Fairhaven"
+  },
+  {
+    "address": "0xff49CA7083cB7d43BdE871A41fB2645b1fE503Ea",
+    "label": "Falmouth"
+  },
+  {
+    "address": "0x53Ce400BB79AcC25e3288aE8C2df730734005EBE",
+    "label": "Hyannis"
+  },
+  {
+    "address": "0x61c7cc44b0EcCA8D5deE8F765A1e2C4de74E4433",
+    "label": "Lexington"
+  },
+  {
+    "address": "0x652123E7131505503Bb0e26407e9A8AfFf9124AA",
+    "label": "Malden"
+  },
+  {
+    "address": "0x03b19e21E189Ac8074622866950985EA63d755d3",
+    "label": "Medford"
+  },
+  {
+    "address": "0x970AAe562D4Ae49809e9C6033E542EbD66B6A7E4",
+    "label": "Milton"
+  },
+  {
+    "address": "0x297DfF6c9EA79DEBc3f81518449a56ad70eDe452",
+    "label": "Natick"
+  },
+  {
+    "address": "0x6731d0Da25Ad0D72Afc663Dd35f858837270Af80",
+    "label": "Newton"
+  },
+  {
+    "address": "0x136D3E6855E60E0b71631F84dFB11791C113Cb84",
+    "label": "Norwood"
+  },
+  {
+    "address": "0x0f561Ed8e8C8b10e43B8af348FbCA5f7395087A4",
+    "label": "Somerville"
+  },
+  {
+    "address": "0x64Bb0a6Ce6904DF7D3f615D624CaF7f7527Ce682",
+    "label": "Waltham"
+  },
+  {
+    "address": "0x1Ac0660bd96D0d9AA697451D6F81546a54564f7E",
+    "label": "Watertown"
+  },
+  {
+    "address": "0x8feA89C65Df3661D0656328a914DEfca2Eb52D24",
+    "label": "Wellesley"
+  },
+  {
+    "address": "0x6f58a926a960b98DB8883bf403F702A3B374EE35",
+    "label": "Weston"
+  }
 ];
 
 // create an instance of web3 from MetaMask
