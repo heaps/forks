@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+
+<h1>Balance List</h1>
+Check Balance:
+<!-- <button onclick="getBalance()">Get Balance</button><br><br> -->
+<div id="status" style="color:#0000FF"></div>
+
+<script>
+
+(async function(){
+
+// -------------------------------------------
+//      sample accounts with city
+//      REMOVE: private keys before deploy
+// -------------------------------------------
+
+var accounts = [
+  {
+    "address": "0xD1D618bcb179db8b020358710138D1A008f4f39E",
+    "label": "Abel"
+  },
+  {
+    "address": "0x866dF68f7776395d85A59d1ABcB5D95f14638631",
+    "label": "Arlington"
+  },
+  {
+    "address": "0x3F433c6DE5f46bB7Bf174718dB9cc169c4824BF5",
+    "label": "Belmont"
+  },
+  {
+    "address": "0xcECf7f733B34aa51d2A9eC34AaD8cbF144093901",
+    "label": "Beverly"
+  },
+  {
+    "address": "0x46291a3cd0BD3d25013974784b2E3cC2Ad261031",
+    "label": "Boston"
+  },
+  {
+    "address": "0x53Dda55F8de8683F10844865e7C50A30b5318c52",
+    "label": "Braintree"
+  },
+  {
+    "address": "0xB172Bc4D9Ff44Fe8De862f2b0146DF5098Ea3c14",
+    "label": "Brookline"
+  },
+  {
+    "address": "0xc69f14E311487202fB3f81863490B31F6334743f",
+    "label": "Cambridge"
+  },
+  {
+    "address": "0x44cD5e12F3A1bED2C5b55C761969381d9c34294d",
+    "label": "Canton"
+  },
+  {
+    "address": "0x42147b478Af95EAFd8c814ee13AbD23EcE931231",
+    "label": "Chappaquiddick"
+  },
+  {
+    "address": "0xCE9735E53475768c435B2a4D47298f0Dc7e6E4B2",
+    "label": "Charlestown"
+  },
+  {
+    "address": "0x39b0EF4969b4ce233a51893A89428c61E5c4ED01",
+    "label": "Clinton"
+  },
+  {
+    "address": "0x9B34CBB24D290ad282F6CEBce67d4d3b51784205",
+    "label": "Concord"
+  },
+  {
+    "address": "0x6b72b1a3414Af26B4e316fd0221BA2AD4fC9ACf8",
+    "label": "Danvers"
+  },
+  {
+    "address": "0xAaC45FF225fcf651141598A8CF8e6a4da1aD1f6C",
+    "label": "Dartmouth"
+  },
+  {
+    "address": "0xC1c1941f77507A944C05213aBD93004d278B8113",
+    "label": "Dedham"
+  },
+  {
+    "address": "0xaDcD3c8DbCe8A1C3A543FDde2f931418F0bE010e",
+    "label": "Dennis"
+  },
+  {
+    "address": "0xaCce8613d11Ff775A5A36d252B3CFD3935F6F8D1",
+    "label": "Duxbury"
+  },
+  {
+    "address": "0x4d2ee0EBbD24B1e982C98B3d221f46171Ef7db89",
+    "label": "Eastham"
+  },
+  {
+    "address": "0x6faf3Cdde2Ac9faEe77C9E8C48F083787e121ADC",
+    "label": "Edgartown"
+  },
+  {
+    "address": "0xeC0eC5F0DB1df5C73e2A74675B8cfA5e4b6A4745",
+    "label": "Everett"
+  },
+  {
+    "address": "0xf83CD7e90d06AD20E394be2d9036eeA76003B761",
+    "label": "Fairhaven"
+  },
+  {
+    "address": "0xfFE2df4C51D94784208dC170DD39C816Fa32B9CD",
+    "label": "Falmouth"
+  },
+  {
+    "address": "0x09342819410AcF7bCa99B21868abE034AfC9393b",
+    "label": "Hyannis"
+  },
+  {
+    "address": "0x2C1ce6c223c9CBbb218B17932972A20a3D5D64F7",
+    "label": "Lexington"
+  },
+  {
+    "address": "0xF9cb2Ff3536599a3E667b4c9f6eA818627EEacB2",
+    "label": "Malden"
+  },
+  {
+    "address": "0x4395d172DA8D758D95E1BA2b408757A3B7f26966",
+    "label": "Medford"
+  },
+  {
+    "address": "0x6a01843BD98D5E11B7fC43B5195C71952D9336a1",
+    "label": "Milton"
+  },
+  {
+    "address": "0x779f0553BD6EAaBD8A2d5059B7Cbf525F7c75f94",
+    "label": "Natick"
+  },
+  {
+    "address": "0xe619e9101E5919ADD9d8e02F43eb65Ec2f131670",
+    "label": "Newton"
+  },
+  {
+    "address": "0xA365ad9d49d9136ae5b94D1011AB2c0634ED6Ac1",
+    "label": "Norwood"
+  },
+  {
+    "address": "0x9183F5C68748fb50F20398A8373121fB64b2e259",
+    "label": "Somerville"
+  },
+  {
+    "address": "0x91a42f99D13A079E85cdE2Bb23B0B19aBBd20c0B",
+    "label": "Wellesley"
+  },
+  {
+    "address": "0x2C15Fc220D2025f8258634986678317525ABdA25",
+    "label": "Waltham"
+  },
+  {
+    "address": "0x4a80ed508980de00789577f1B337F7e3777FE3F8",
+    "label": "Watertown"
+  },
+  {
+    "address": "0x0526Aece7459f953796983140e1Bbd3Ecf47D83E",
+    "label": "Weston"
+  }
+];
+
+// window.ethereum
+if (typeof window.ethereum !== 'undefined') {
+  console.log('MetaMask is installed!');
+}
+
+// counter for array item
+var counter = 0;
+
+async function getBalance(accounts){
+
+  var length = accounts.length;
+  for (var i = 0; i < length; i++) {
+    counter++;
+
+    var balance = await ethereum.request({ method: 'eth_getBalance', params:[accounts[i].address,'latest']});
+    balance = parseInt(balance, 16);
+    balance = Math.floor(balance/1000000000000000000);
+
+    // add balance to account object in accounts array
+    // fromWei returns ether equivalent
+    addBalance(accounts[i],balance);
+
+	};
+  console.log(accounts);
+  return accounts;
+}
+
+function displayBalances(accounts){
+
+	var table = '<table class="table" >' +
+  					'<thead class="thead-light">' +
+					    '<tr>' +
+					      '<th scope="col">balance</th>' +
+					      '<th scope="col">account</th>' +
+					      '<th scope="col">address</th>' +
+					    '</tr>' +
+					 '</thead>' +
+					 '<tbody>';
+
+	accounts.forEach(function(account){
+		table += '<tr>';
+		table += '  <td>' + account.balance + '</td>';
+		table += '  <td>' + account.label + '</td>';		
+		table += '  <td>' + account.address + '</td>';				
+		table += '</tr>';		
+	});
+
+  	table += '  </tbody>';
+	table += '</table>';
+	document.getElementById('status').innerHTML += table;
+
+}
+
+function addBalance(account, balance){
+	account.balance = balance;
+}
+
+accounts = await getBalance(accounts);
+console.log(accounts);
+displayBalances(accounts);
+
+
+})();
+
+</script>
+</html>
+
